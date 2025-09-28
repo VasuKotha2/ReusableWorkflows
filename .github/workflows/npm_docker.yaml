@@ -5,6 +5,7 @@ on:
       RUNS_ON:
         required: false
         default: self-hosted
+        type: string
       NPM_DEPS_COMMAND:
         description: Command to install dependencies  
         default: "npm install"
