@@ -50,6 +50,7 @@ jobs:
   build:
     name: build
     runs-on: ${{ inputs.RUNS_ON }}
+    needs: install
     steps:
       - name: Checkout
         uses: actions/checkout@v4
