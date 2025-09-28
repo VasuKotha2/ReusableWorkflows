@@ -33,9 +33,6 @@ on:
         required: false
       
 jobs:
-  setup:
-    name: Setup Pipeline
-    runs-on: ${{ inputs.RUNS_ON }}
   install:
     name: Install dependency
     runs-on: ${{ inputs.RUNS_ON }}
