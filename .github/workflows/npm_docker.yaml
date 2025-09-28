@@ -1,5 +1,5 @@
 name: Run NPM CI
-on:
+on: 
   workflow_call:
     inputs:
       RUNS_ON:
