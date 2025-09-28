@@ -1,0 +1,64 @@
+name: Run NPM CI
+on:
+  workflow_call:
+    inputs:
+      RUNS_ON:
+        required: false
+        default: self-hosted
+      NPM_DEPS_COMMAND:
+        description: Command to install dependencies  
+        default: "npm install"
+        required: false
+        type: string
+      NPM_BUILD_COMMAND: 
+        description: Command to build the app
+        type: string
+        default: "npm run build"
+        required: false
+      NPM_LINT_COMMAND:
+        description: Command to build the app
+        type: string
+        default: "npm run lint"
+        required: false
+      NPM_TEST_COMMAND:
+        description: Command to build the app
+        type: string
+        default: "npm run test"
+        required: false
+      NODE_VERSION:
+        description: Node version to run the application
+        type: float
+        default: 22.5.0
+        required: false
+      
+jobs:
+  setup:
+    name: Setup Pipeline
+    runs-on: ${{ inputs.RUNS_ON }}
+  install:
+    name: Install dependency
+    runs-on: ${{ inputs.RUNS_ON }}
+    steps: 
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install dependencies
+        run: ${{ inputs.NPM_DEPS_COMMAND }}
+        shell: bash
+      - name: Cache dependencies
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ inputs.WORKSPACE }}/node_modules
+          key: ${{ steps.get-cache-key.outputs.cache-key }}
+  build:
+    name: build
+    runs-on: ${{ inputs.RUNS_ON }}
+    needs: setup
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build
+        run: ${{ inputs.NPM_BUILD_COMMAND }}
+        shell: bash
+
+
+  
