@@ -27,7 +27,7 @@ on:
         required: false
       NODE_VERSION:
         description: Node version to run the application
-        type: float
+        type: string
         default: 22.5.0
         required: false
       
