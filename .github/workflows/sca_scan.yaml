@@ -1,0 +1,54 @@
+name: SCA Scan
+description: 'Runs Snyk SCA Scan'
+inputs:
+  snyk-token: 
+    description: Token for sca API
+    required: true
+  snyk-token-pool:
+    description: Token pool for Snyk API
+    required: true
+  snyk-org:
+    description: id of the Snyk org to monitor project under
+    default: ''
+  artifactory_token:
+    description: token for artifactory
+    required: true
+  artifactory_username:
+    description: username for artifactory
+    required: true
+  workspace:
+    description: The current workspace
+    default: '${{ github.workspace }}'
+  working-dirs:
+    description: Comma seperated list of directories to perform SCA scanning on
+    default: '.'
+  severity-threshold:
+    description: severity to fail pipeline for security vulnerabilities. If any vulnerability is found at or over the given threshold, then the jon will fail. Select "none" to fail on all vulnerabilities found.
+    type: choice
+    options:
+      - 'high'
+      - 'medium'
+      - 'low'
+    default: "high"
+  extra-parameters:
+    description: Additional parameters to add to scan command
+    default: ''
+  artifact:
+    description: (Snyk Only) Normally this is fine to leave blank, but if Snyk is having a hard time finding it, it can be defined here.
+    default: ''
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Download and auth Snyk
+      shell: bash
+      run: |
+        chmod +x "./scripts/snyk_download.sh"
+    - name: Get Org name
+      shell: bash
+      id: get_org_id
+      run: |
+        if [[ -z "${{ inputs.snyk-org }}" ]]; then
+          SNYK_GROUP_ID=""
+          org_id=$(python3 ./src/python/snyk_find_org_id_by_target.py)
+          echo "SNYK_ORG="
